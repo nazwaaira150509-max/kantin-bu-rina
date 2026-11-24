@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WarungKu - Kasir Bu Rina</title>
+<style>
+:root{
+  --red:#ef476f;--orange:#f78c2b;--yellow:#f4c542;--green:#20a66a;
+  --blue:#3298db;--purple:#8963cf;--pink:#e96bb5;--ink:#202431;
+  --muted:#626b80;--line:#d9deea;--paper:#fff;--bg:#f7f8fc;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;font-weight:700}
+header{background:#fff;border-bottom:3px solid var(--yellow);padding:18px max(18px,calc((100% - 1100px)/2));position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:58px;height:58px;border-radius:16px;background:var(--purple);color:white;display:grid;place-items:center;font-weight:900;font-size:23px;border:4px solid var(--yellow)}
+.brand h1{font-size:23px;margin:0}.brand small{color:var(--muted);font-weight:800;letter-spacing:1px}
+nav{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+nav button{background:#f0f2f7;color:var(--muted)}
+nav button.active{background:var(--blue);color:#fff}
+.session{display:flex;align-items:center;gap:10px;margin-top:13px;flex-wrap:wrap}
+.pill{background:#e2f7ec;color:#167b4d;border-radius:9px;padding:6px 12px;font-weight:800}
+.logout{background:#ffe4e9;color:#b72f4c}
+main{max-width:1100px;margin:25px auto;padding:0 18px 40px}
+.panel,.stat,.login-card{background:#fff;border:1.5px solid var(--line);border-radius:22px;padding:20px;margin-bottom:20px}
+.panel h2{margin:0 0 16px;font-size:22px}
+input,select{width:100%;padding:14px 15px;border:1.5px solid #cbd3e2;border-radius:13px;background:#fbfcff;color:var(--ink);margin:5px 0 10px;outline:none}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #3298db20}
+.btn-blue{background:var(--blue);color:#fff}.btn-green{background:var(--green);color:#fff}
+.btn-purple{background:var(--purple);color:#fff}.btn-orange{background:var(--orange);color:#fff}
+.btn-red{background:#ffe4e9;color:#b72f4c}.btn-light{background:#f0f2f7;color:var(--ink);border:1px solid var(--line)}
+.rainbow-bar{height:7px;border-radius:10px;margin:0 0 20px;background:linear-gradient(90deg,var(--red) 0 16.6%,var(--orange) 16.6% 33.2%,var(--yellow) 33.2% 49.8%,var(--green) 49.8% 66.4%,var(--blue) 66.4% 83%,var(--purple) 83%)}
+.toolbar{display:grid;grid-template-columns:1fr;gap:8px}
+.categories{display:flex;gap:8px;flex-wrap:wrap;margin-top:5px}
+.categories button{background:#f1f2f7;color:var(--ink);border:1px solid var(--line)}
+.categories button.active{background:var(--yellow);border-color:var(--yellow)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:17px;background:#fff;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th{background:#f0f2f7;color:#596176;text-align:left;padding:14px;font-size:13px}
+td{padding:13px 14px;border-top:1px solid #e4e7ee;vertical-align:middle}
+.product-name{font-weight:800}.sub{color:var(--muted);font-size:13px}
+.stock{background:#f0f2f7;border-radius:8px;padding:4px 9px;font-weight:800}
+.qty{display:flex;align-items:center;gap:8px}.qty button{padding:8px 12px}.qty .plus{background:var(--green);color:white}.qty .minus{background:#f0f2f7;border:1px solid var(--line)}
+.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:start}
+.cart-item{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e5e7ed;padding:10px 0}
+.total-box,.change-box{background:#f0f2f7;border-radius:15px;padding:15px;display:flex;justify-content:space-between;align-items:center;margin:12px 0}
+.total-box strong{font-size:28px;color:var(--green)}
+.change-box strong{font-size:23px}
+.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.presets button{background:#f0f2f7;border:1px solid var(--line);padding:10px 5px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stat{margin:0;border-top:5px solid var(--blue)}
+.stat:nth-child(2){border-top-color:var(--orange)}.stat:nth-child(3){border-top-color:var(--green)}
+.stat:nth-child(4){border-top-color:var(--purple)}.stat:nth-child(5){border-top-color:var(--pink)}.stat:nth-child(6){border-top-color:var(--yellow)}
+.stat small{font-weight:800;color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:7px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.form-grid .wide{grid-column:1/-1}
+.login-screen{min-height:80vh;display:grid;place-items:center;padding:20px}
+.login-card{width:min(540px,100%);padding:28px}
+.login-heading{display:flex;gap:15px;align-items:center}
+.login-heading .logo{flex-shrink:0}
+.login-card h1{margin:0;font-size:27px}
+.login-card p{color:var(--muted);line-height:1.5}
+.login-card .submit{width:100%;background:var(--purple);color:#fff;margin-top:8px;padding:14px}
+.hidden{display:none!important}
+.notice{padding:12px 14px;border-radius:12px;background:#fff5d9;color:#795c00;margin:10px 0}
+.empty{text-align:center;color:var(--muted);padding:25px}
+footer{text-align:center;color:var(--muted);padding:20px;border-top:1px solid var(--line)}
+@media(max-width:760px){main{margin:18px auto}.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:21px}header{padding:14px 16px}nav button{flex:1;padding:10px 8px}.panel{padding:16px}.presets{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:390px){.stats{grid-template-columns:1fr}.brand h1{font-size:20px}.login-card{padding:20px}}
+
+.receipt-overlay{position:fixed;inset:0;background:#20243199;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.receipt-paper{background:#fff;color:#202431;width:min(390px,100%);padding:24px;border-radius:12px;box-shadow:0 12px 45px #0003;font-family:Arial,sans-serif}
+.receipt-head{text-align:center}.receipt-head h2{margin:8px 0 2px;letter-spacing:2px}.receipt-head p{font-size:12px;color:#626b80;margin:8px 0}
+.receipt-logo{margin:auto;width:43px;height:43px;border-radius:12px;background:var(--red);color:white;display:grid;place-items:center;font-weight:900}
+.receipt-rule{border-top:1px dashed #9ba2b2;margin:14px 0}
+.receipt-meta div,.receipt-line,.receipt-total{display:flex;justify-content:space-between;gap:12px;margin:7px 0;font-size:13px}
+.receipt-meta span,.receipt-line span{color:#626b80}
+.receipt-item{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin:9px 0}
+.receipt-item small{display:block;color:#626b80;margin-top:3px}
+.receipt-total{font-size:16px;font-weight:800}.receipt-total b{font-size:19px;color:var(--red)}
+.receipt-thanks{text-align:center;color:#626b80;font-size:12px;line-height:1.6}
+.receipt-actions{display:flex;gap:10px;margin-top:12px;width:min(390px,100%)}
+.receipt-actions button{flex:1}
+@media print{
+  @page{size:80mm auto;margin:5mm}
+  body{background:#fff!important}
+  body *{visibility:hidden!important}
+  #receiptModal,#receiptModal *{visibility:visible!important}
+  #receiptModal{position:absolute!important;inset:0!important;display:block!important;background:#fff!important;padding:0!important;overflow:visible!important}
+  .receipt-paper{width:100%!important;max-width:none!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
+  .receipt-actions{display:none!important}
+}
+
+</style>
+</head>
+<body>
+<div id="login" class="login-screen">
+  <section class="login-card">
+    <div class="rainbow-bar"></div>
+    <div class="login-heading"><div class="logo">POS</div><div><small>APLIKASI KASIR • WARUNGKU</small><h1>Login Kasir Bu Rina</h1></div></div>
+    <p>Masukkan PIN operator untuk mengakses kasir, pengelolaan stok barang, dan laporan penjualan.</p>
+    <label for="pinLogin"><b>PIN OPERATOR</b></label>
+    <input id="pinLogin" type="password" inputmode="numeric" placeholder="PIN default: 1234">
+    <button class="submit" onclick="login()">Masuk Terminal Kasir</button>
+    <div id="loginError" class="notice hidden">PIN tidak sesuai. Silakan coba lagi.</div>
+    <p style="text-align:center;border-top:1px solid var(--line);padding-top:15px">Penyimpanan data: browser perangkat ini</p>
+  </section>
+</div>
+<div id="app" class="hidden">
+<header>
+  <div class="brand"><div class="logo">POS</div><div><h1>WarungKu</h1><small>KASIR BU RINA</small></div></div>
+  <nav>
+    <button id="tab-pos" class="active" onclick="showTab('pos')">Kasir POS</button>
+    <button id="tab-stock" onclick="showTab('stock')">Kelola Stok</button>
+    <button id="tab-report" onclick="showTab('report')">Laporan & PIN</button>
+  </nav>
+  <div class="session"><span class="pill">● Sistem Aktif</span><b>Bu Rina</b><button class="logout" onclick="logout()">Keluar</button></div>
+</header>
+<main>
+<section id="page-pos">
+  <div class="layout">
+    <div>
+      <div class="panel">
+        <div class="rainbow-bar"></div>
+        <div class="toolbar"><input id="search" placeholder="Cari nama barang atau SKU..." oninput="renderProducts()"></div>
+        <div class="categories" id="categories"></div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>BARANG & SKU</th><th>STOK</th><th>HARGA</th><th>KUANTITAS</th></tr></thead><tbody id="productRows"></tbody></table></div>
+    </div>
+    <div class="panel">
+      <div class="rainbow-bar"></div>
+      <h2>Nota Belanja Aktif <button class="btn-red" style="float:right" onclick="clearCart()">Reset</button></h2>
+      <div id="cartCount" class="sub">0 item</div><div id="cartItems"></div>
+      <div class="total-box"><b>TOTAL BAYAR</b><strong id="total">Rp 0</strong></div>
+      <b>UANG DITERIMA (TUNAI)</b>
+      <div class="presets" style="margin-top:8px">
+        <button onclick="setCash('exact')">Uang Pas</button><button onclick="setCash(20000)">20.000</button><button onclick="setCash(50000)">50.000</button><button onclick="setCash(100000)">100.000</button>
+      </div>
+      <input id="cash" type="number" min="0" placeholder="Nominal tunai (Rp)" oninput="renderCart()">
+      <div class="change-box"><span>Kembalian</span><strong id="change">Rp 0</strong></div>
+      <div class="actions"><button class="btn-green" onclick="pay('Tunai')">Bayar Tunai</button><button class="btn-blue" onclick="pay('QRIS')">Bayar QRIS</button></div>
+      <p class="sub">Pembayaran berhasil akan otomatis mengurangi stok barang.</p>
+    </div>
+  </div>
+</section>
+<section id="page-stock" class="hidden">
+  <div class="panel">
+    <div class="rainbow-bar"></div><h2 id="formTitle">Tambah Produk</h2>
+    <form id="productForm" onsubmit="saveProduct(event)">
+      <div class="form-grid">
+        <input id="sku" placeholder="SKU (kosong = otomatis)">
+        <input id="name" placeholder="Nama Barang" required>
+        <select id="category"><option>Sembako</option><option>Alat Tulis</option><option>Minuman</option><option>Makanan Ringan</option><option>Lainnya</option></select>
+        <input id="cost" type="number" min="0" placeholder="HPP / Modal (Rp)" required>
+        <input id="price" type="number" min="0" placeholder="Harga Jual (Rp)" required>
+        <input id="stockQty" type="number" min="0" placeholder="Jumlah Stok Fisik" required>
+      </div>
+      <div class="actions"><button class="btn-purple" type="submit">Simpan Produk</button><button class="btn-light" type="button" onclick="resetProductForm()">Reset</button></div>
+    </form>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>SKU / NAMA</th><th>HPP</th><th>JUAL</th><th>MARGIN</th><th>STOK</th><th>AKSI</th></tr></thead><tbody id="stockRows"></tbody></table></div>
+</section>
+<section id="page-report" class="hidden">
+  <div class="stats">
+    <div class="stat"><small>TOTAL OMZET</small><strong id="revenue">Rp 0</strong><span id="trxCount" class="sub">0 transaksi</span></div>
+    <div class="stat"><small>TOTAL MODAL (HPP)</small><strong id="capital">Rp 0</strong></div>
+    <div class="stat"><small>LABA KOTOR</small><strong id="profit">Rp 0</strong></div>
+  </div>
+  <div class="panel" style="margin-top:20px"><div class="rainbow-bar"></div><h2>Riwayat Transaksi</h2>
+    <div class="table-wrap"><table><thead><tr><th>ID TRANSAKSI</th><th>WAKTU</th><th>METODE</th><th>ITEM</th><th>TOTAL</th></tr></thead><tbody id="historyRows"></tbody></table></div>
+  </div>
+  <div class="panel"><h2>Ubah PIN Operator</h2>
+    <input id="oldPin" type="password" inputmode="numeric" placeholder="PIN Lama">
+    <input id="newPin" type="password" inputmode="numeric" placeholder="PIN Baru (minimal 4 angka)">
+    <button class="btn-purple" onclick="changePin()">Simpan PIN Baru</button>
+    <div id="pinMessage" class="sub"></div>
+  </div>
+</section>
+</main>
+
+<div id="receiptModal" class="receipt-overlay hidden">
+  <section class="receipt-paper" id="receiptPaper">
+    <div class="receipt-head">
+      <div class="receipt-logo">POS</div>
+      <h2>WARUNGKU</h2>
+      <b>KASIR BU RINA</b>
+      <p>Terima kasih sudah berbelanja</p>
+    </div>
+    <div class="receipt-rule"></div>
+    <div class="receipt-meta">
+      <div><span>No. Transaksi</span><b id="receiptId">-</b></div>
+      <div><span>Tanggal</span><b id="receiptDate">-</b></div>
+      <div><span>Metode</span><b id="receiptMethod">-</b></div>
+    </div>
+    <div class="receipt-rule"></div>
+    <div id="receiptItems"></div>
+    <div class="receipt-rule"></div>
+    <div class="receipt-total"><span>TOTAL BAYAR</span><b id="receiptTotal">Rp 0</b></div>
+    <div id="receiptCashArea">
+      <div class="receipt-line"><span>Uang diterima</span><b id="receiptCash">Rp 0</b></div>
+      <div class="receipt-line"><span>Kembalian</span><b id="receiptChange">Rp 0</b></div>
+    </div>
+    <div id="receiptQrisArea" class="receipt-line hidden"><span>Status QRIS</span><b>LUNAS</b></div>
+    <div class="receipt-rule"></div>
+    <p class="receipt-thanks">Simpan struk ini sebagai bukti pembayaran.<br>Semoga hari Anda menyenangkan!</p>
+  </section>
+  <div class="receipt-actions no-print">
+    <button class="btn-light" onclick="closeReceipt()">Tutup</button>
+    <button class="btn-purple" onclick="window.print()">Cetak / Simpan PDF</button>
+  </div>
+</div>
+
+<footer>WarungKu • Kasir Bu Rina • Tema Rainbow</footer>
+</div>
+<script>
+const money=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
+const seed=[
+ {sku:'ATK-02',name:'Buku Tulis Sidu 38 Lembar',category:'Alat Tulis',cost:3200,price:4500,stock:37},
+ {sku:'ATK-03',name:'Pulpen Pilot G2 (Hitam)',category:'Alat Tulis',cost:4200,price:6000,stock:30},
+ {sku:'MNM-07',name:'Teh Botol Sosro Kotak 250ml',category:'Minuman',cost:3000,price:4000,stock:35},
+ {sku:'SBK-01',name:'Beras Ramos 1kg',category:'Sembako',cost:12000,price:14000,stock:25},
+ {sku:'SBK-04',name:'Minyak Goreng 1L Bimoli',category:'Sembako',cost:14500,price:16500,stock:18},
+ {sku:'SBK-06',name:'Telur Ayam Negeri (1 Butir)',category:'Sembako',cost:1600,price:2000,stock:90},
+ {sku:'SNK-05',name:'Indomie Goreng Original',category:'Makanan Ringan',cost:2800,price:3500,stock:60}
+];
+let products=JSON.parse(localStorage.getItem('wr_products')||'null')||seed;
+let transactions=JSON.parse(localStorage.getItem('wr_transactions')||'[]');
+let pin=localStorage.getItem('wr_pin')||'1234',cart={},activeCategory='Semua',editSku=null;
+function persist(){localStorage.setItem('wr_products',JSON.stringify(products));localStorage.setItem('wr_transactions',JSON.stringify(transactions))}
+function login(){if(document.getElementById('pinLogin').value===pin){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');renderAll()}else document.getElementById('loginError').classList.remove('hidden')}
+document.getElementById('pinLogin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+function logout(){cart={};document.getElementById('app').classList.add('hidden');document.getElementById('login').classList.remove('hidden');document.getElementById('pinLogin').value=''}
+function showTab(tab){['pos','stock','report'].forEach(t=>{document.getElementById('page-'+t).classList.toggle('hidden',t!==tab);document.getElementById('tab-'+t).classList.toggle('active',t===tab)});if(tab==='stock')renderStock();if(tab==='report')renderReport()}
+function renderAll(){renderCategories();renderProducts();renderCart();renderStock();renderReport()}
+function renderCategories(){let cats=['Semua','Sembako','Alat Tulis','Minuman','Makanan Ringan','Lainnya'];document.getElementById('categories').innerHTML=cats.map(c=>`<button class="${activeCategory===c?'active':''}" onclick="activeCategory='${c}';renderCategories();renderProducts()">${c}</button>`).join('')}
+function renderProducts(){let q=document.getElementById('search').value.toLowerCase();let rows=products.filter(p=>(activeCategory==='Semua'||p.category===activeCategory)&&(`${p.name} ${p.sku}`.toLowerCase().includes(q)));document.getElementById('productRows').innerHTML=rows.map(p=>`<tr><td><div class="product-name">${p.name}</div><div class="sub">${p.sku} • ${p.category}</div></td><td><span class="stock">${p.stock}</span></td><td><b>${money(p.price)}</b></td><td><div class="qty"><button class="minus" onclick="changeQty('${p.sku}',-1)">−</button><b>${cart[p.sku]||0}</b><button class="plus" onclick="changeQty('${p.sku}',1)">+</button></div></td></tr>`).join('')||'<tr><td colspan="4" class="empty">Barang tidak ditemukan</td></tr>'}
+function changeQty(sku,delta){let p=products.find(x=>x.sku===sku),n=(cart[sku]||0)+delta;if(n<0)return;if(n>p.stock){alert('Jumlah melebihi stok tersedia.');return}if(n===0)delete cart[sku];else cart[sku]=n;renderProducts();renderCart()}
+function cartTotal(){return Object.entries(cart).reduce((sum,[sku,q])=>sum+products.find(p=>p.sku===sku).price*q,0)}
+function renderCart(){let entries=Object.entries(cart),total=cartTotal();document.getElementById('cartCount').textContent=entries.reduce((s,[,q])=>s+q,0)+' item';document.getElementById('cartItems').innerHTML=entries.map(([sku,q])=>{let p=products.find(x=>x.sku===sku);return `<div class="cart-item"><span><b>${p.name}</b><br><span class="sub">${q} × ${money(p.price)}</span></span><b>${money(q*p.price)}</b></div>`}).join('')||'<div class="empty">Belum ada barang di nota</div>';document.getElementById('total').textContent=money(total);let cash=Number(document.getElementById('cash').value||0);document.getElementById('change').textContent=money(Math.max(0,cash-total))}
+function setCash(v){document.getElementById('cash').value=v==='exact'?cartTotal():v;renderCart()}
+function clearCart(){cart={};document.getElementById('cash').value='';renderProducts();renderCart()}
+function pay(method){let total=cartTotal(),entries=Object.entries(cart);if(!entries.length){alert('Nota masih kosong.');return}let cash=Number(document.getElementById('cash').value||0);if(method==='Tunai'&&cash<total){alert('Uang diterima belum mencukupi.');return}let itemCount=entries.reduce((s,[,q])=>s+q,0);let hpp=0;let receiptItems=entries.map(([sku,q])=>{let p=products.find(x=>x.sku===sku);hpp+=p.cost*q;return {name:p.name,sku,qty:q,price:p.price,subtotal:p.price*q}});entries.forEach(([sku,q])=>{let p=products.find(x=>x.sku===sku);p.stock-=q});let now=new Date();let trx={id:'TRX-'+String(Date.now()).slice(-6),time:now.toLocaleString('id-ID'),method,total,hpp,itemCount,change:method==='Tunai'?cash-total:0};transactions.unshift(trx);persist();showReceipt({...trx,items:receiptItems,cash:method==='Tunai'?cash:total});clearCart();renderAll()}
+function escapeReceiptText(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function showReceipt(t){document.getElementById('receiptId').textContent=t.id;document.getElementById('receiptDate').textContent=t.time;document.getElementById('receiptMethod').textContent=t.method;document.getElementById('receiptTotal').textContent=money(t.total);document.getElementById('receiptItems').innerHTML=t.items.map(i=>`<div class="receipt-item"><div>${escapeReceiptText(i.name)}<small>${escapeReceiptText(i.sku)} · ${i.qty} × ${money(i.price)}</small></div><b>${money(i.subtotal)}</b></div>`).join('');document.getElementById('receiptCashArea').classList.toggle('hidden',t.method!=='Tunai');document.getElementById('receiptQrisArea').classList.toggle('hidden',t.method!=='QRIS');document.getElementById('receiptCash').textContent=money(t.cash);document.getElementById('receiptChange').textContent=money(t.change);document.getElementById('receiptModal').classList.remove('hidden')}
+function closeReceipt(){document.getElementById('receiptModal').classList.add('hidden')}
+function resetProductForm(){document.getElementById('productForm').reset();editSku=null;document.getElementById('formTitle').textContent='Tambah Produk'}
+function saveProduct(e){e.preventDefault();let sku=document.getElementById('sku').value.trim()||('BRG-'+Date.now().toString().slice(-5));let p={sku,name:document.getElementById('name').value.trim(),category:document.getElementById('category').value,cost:Number(document.getElementById('cost').value),price:Number(document.getElementById('price').value),stock:Number(document.getElementById('stockQty').value)};if(editSku){let i=products.findIndex(x=>x.sku===editSku);if(sku!==editSku&&products.some(x=>x.sku===sku)){alert('SKU sudah digunakan.');return}products[i]=p}else{if(products.some(x=>x.sku===sku)){alert('SKU sudah digunakan.');return}products.push(p)}persist();resetProductForm();renderAll();alert('Produk berhasil disimpan.')}
+function editProduct(sku){let p=products.find(x=>x.sku===sku);editSku=sku;document.getElementById('sku').value=p.sku;document.getElementById('name').value=p.name;document.getElementById('category').value=p.category;document.getElementById('cost').value=p.cost;document.getElementById('price').value=p.price;document.getElementById('stockQty').value=p.stock;document.getElementById('formTitle').textContent='Edit Produk: '+p.name;window.scrollTo({top:0,behavior:'smooth'})}
+function deleteProduct(sku){if(cart[sku]){alert('Hapus barang dari nota sebelum menghapus produk.');return}if(confirm('Yakin ingin menghapus produk ini?')){products=products.filter(p=>p.sku!==sku);persist();renderAll()}}
+function renderStock(){document.getElementById('stockRows').innerHTML=products.map(p=>`<tr><td><b>${p.name}</b><div class="sub">${p.sku} • ${p.category}</div></td><td>${money(p.cost)}</td><td><b>${money(p.price)}</b></td><td style="color:var(--green);font-weight:800">${money(p.price-p.cost)}</td><td><b>${p.stock}</b></td><td><button class="btn-light" onclick="editProduct('${p.sku}')">Edit</button> <button class="btn-red" onclick="deleteProduct('${p.sku}')">Hapus</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Belum ada produk</td></tr>'}
+function renderReport(){let revenue=transactions.reduce((s,t)=>s+t.total,0),capital=transactions.reduce((s,t)=>s+t.hpp,0);document.getElementById('revenue').textContent=money(revenue);document.getElementById('capital').textContent=money(capital);document.getElementById('profit').textContent=money(revenue-capital);document.getElementById('trxCount').textContent=transactions.length+' transaksi';document.getElementById('historyRows').innerHTML=transactions.map(t=>`<tr><td><b>${t.id}</b></td><td>${t.time}</td><td><span class="stock">${t.method}</span></td><td>${t.itemCount}</td><td><b>${money(t.total)}</b></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Belum ada transaksi</td></tr>'}
+function changePin(){let old=document.getElementById('oldPin').value,n=document.getElementById('newPin').value,msg=document.getElementById('pinMessage');if(old!==pin){msg.textContent='PIN lama tidak sesuai.';return}if(!/^\d{4,}$/.test(n)){msg.textContent='PIN baru harus minimal 4 angka.';return}pin=n;localStorage.setItem('wr_pin',pin);document.getElementById('oldPin').value='';document.getElementById('newPin').value='';msg.textContent='PIN berhasil diperbarui.'}
+</script>
+</body>
+</html>
